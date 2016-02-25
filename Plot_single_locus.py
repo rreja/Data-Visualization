@@ -4,19 +4,13 @@ from itertools import izip, cycle, tee
 from optparse import OptionParser , IndentedHelpFormatter
 from pylab import *
 import numpy as np
-##from scipy import stats
-#colors = ["#CC0000","#FF0000","#CC00CC","#FF00FF","#336600","#339900","#000000","#666666","#0000FF","#6666FF","#00CC05","#00FF00"]
 
-#colors = ["b","b","#000000","#000000"]
 
-## Colors for Rpb3-MHS, Rpbs-HS03, Ser2, Ser5 and Ser7.
+# Color schema, Good for upto plotting 6 factors in a single plot, add more colors 
 colors = ["#CC0000","#FF0000","#CC00CC","#FF00FF","#336600","#339900","#000000","#666666","#3399FF","#ADD6FF","#336600","#99B280"]
-#colors = ["#CC00CC","#FF00FF","#336600","#339900","#CC0000","#FF0000","#000000","#666666","#3399FF","#ADD6FF","#336600","#99B280"]
 
-# Colors for filled in plots for TAFs
-#colors = ["#8E2323","#CC3232","#660198","#820BBB","#CCCC00","#FFFF00","#FF9900","#FFCD82","#33CCCC","#00FFFF"]
 
-def  process_files(sense,anti,options,output_folder,count,ax,color_count):
+def process_twostrand_cdt_files(sense,anti,options,output_folder,count,ax,color_count):
     print "processing "+sense+" and "+anti
     X =[]
     # Process Sense file first
@@ -35,7 +29,7 @@ def  process_files(sense,anti,options,output_folder,count,ax,color_count):
         newList = [float(x) for x in tmplist]
         Y1 = map(add,Y1,newList)
     
-    # Process anti-sense file
+    # Process Anti-sense file
     in_anti = open(anti,"rt")
     for line in in_anti:
         if line.startswith("Uniqe"):# or line.startswith("ID"):
@@ -47,17 +41,15 @@ def  process_files(sense,anti,options,output_folder,count,ax,color_count):
         tmplist = line.rstrip().split("\t")[2:]
         newList = [float(x) for x in tmplist]
         Y2 = map(add,Y2,newList)
-    # Uncomment here to normalize by number of genes.
-    #Y1 = [float(x)/1282 for x in Y1]
-    #Y2 = [float(x)/1282 for x in Y2]
+    
     plot_graph(X,Y1,Y2,xmin,xmax,options,count,ax,color_count)
-    ##plot_graph(X,newY1,newY2,xmin,xmax,options,count)
+    
     
 
-def process_onestrand_files(infile,options,output_folder,count,ax,color_count):
+def process_onestrand_cdt_files(infile,options,output_folder,count,ax,color_count):
     print "processing "+infile
     X = []
-    # Process the only CDT file 
+    # Process the CDT file 
     in_sense = open(infile,"rt")
     for line in in_sense:
         if line.startswith("Uniqe") or line.startswith("ID"):
@@ -233,7 +225,7 @@ def run():
             for f in sense_files:
                 count = count + 1
                 
-                process_onestrand_files(f,options,output_folder,count,ax,color_count)
+                process_onestrand_cdt_files(f,options,output_folder,count,ax,color_count)
                 color_count = color_count + 1
             savefig(outfile)
         else:   
@@ -252,7 +244,7 @@ def run():
                         file2_sense = f2
                         Oratio = Nratio
                     
-                process_files(file2_sense,file1_anti,options,output_folder,count,ax,color_count)
+                process_twostrand_cdt_files(file2_sense,file1_anti,options,output_folder,count,ax,color_count)
                 color_count = color_count + 2
             savefig(outfile)
     
