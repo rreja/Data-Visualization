@@ -195,7 +195,7 @@ input_paths may be:
 - a directory to run on all files in them
 
 example usages:
-python composite_for_many_factors_one_plot.py /usr/local/folder_containing_CDT_files
+python composite_plots.py /usr/local/folder_containing_CDT_files
 '''.lstrip()
 
 
